@@ -448,7 +448,7 @@ class MoodleRest
                     'method'  => 'POST',
                     'header'  => 'Content-type: application/x-www-form-urlencoded',
 		    'content' => $query_string,
-		    'timeout' => 600
+		    'timeout' => 3600
                 ),
             );
             $context = stream_context_create($options);
