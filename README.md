@@ -59,14 +59,27 @@ $config['token']    = '74833e911605ee374986da0e41874371';
 
 There are two other config options you can set - whether you want the script to continue or stop if it encounters an error, and whether you want to enable test mode. When test mode is enabled, the script will tell you which courses it wants to delete, but it won't actually delete them.
 
-The script has two built-in dates called the **safety date** and the **modified date**. You can configure these by changing these values:
+## Enabling Safety Checks
+
+The script has built-in safety checks. If you disable all of them, it will delete every course in the CSV. If you enable them, the script will perform extra checks before it deletes a course. You can disable these checks by setting any of them to `false`.
+
+```
+$config['check-time-created']  = true;
+$config['check-time-modified'] = true;
+$config['check-start-date']    = true;
+$config['check-end-date']      = true;
+$config['check-for-students']  = true;
+$config['check-for-changes']   = true;
+```
+
+Below the rules, you will find two dates called the **safety date** and the **modified date**. These are used by the safety checks to check the age of a course, and when it was last changed.
 
 ```
 $safetyDate = strtotime("2016-08-01 00:00:00");
 $modifyDate = strtotime("2021-08-01 00:00:00");
 ```
 
-The script will not delete a course if the start date, end date or creation date is after the **safety date**. The script will not delete a course if any course settings were changed, or if anything was added to the course, after the **modified date**. These features stop you accidentally deleting a course from years ago that people are still using.
+The course creation time, start date and end date are checked against `safetyDate`. The date the course was last modified, and whether there have been any recent changes, are checked against `modifyDate`.
 
 In the example above, the script will only delete courses that were created before August 2016, and whose start date and end date are both before August 2016. It will not delete any course if someone has changed a setting or added an activity or resource after August 2021.
 
@@ -81,3 +94,11 @@ $idField = 0;
 ```
 
 This setting tells the script which field of the CSV file contains the course ID number. Note that the numbers start with 0 and not 1. So if your course ID is the fifth field of your CSV file, you should put 4 here, not 5.
+
+## Running the Script
+
+Now, we're ready to run the script. If you're running it for the first time, you should make sure ``$config['test']`` is set to ``true``. This will make the script tell you which courses it wants to delete, but it won't actually delete them.
+
+Open a terminal and change to the folder where your scripts are located. Type this to run the script:
+
+``php delete-old-courses.php``
